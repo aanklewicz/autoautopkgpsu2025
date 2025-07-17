@@ -8,6 +8,7 @@
 	</array>
 	<key>managed_installs</key>
 	<array>
+		<string>Firefox</string>
 		<string>zoomusInstallerFull</string>
 	</array>
 </dict>
