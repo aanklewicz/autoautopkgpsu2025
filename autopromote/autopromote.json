@@ -1,0 +1,56 @@
+{
+	"channels": {
+		"slow": 2.5,
+		"fast": 0.5
+	},
+	"catalogs": {
+		"development": {
+			"days": 2,
+			"next": "testing"
+		},
+		"testing": {
+			"days": 2,
+			"next": "Production"
+		},
+                "Production": {
+                        "days": null,
+                        "next": null
+                }
+	},
+	"denylist": {
+		"LAPSDecode": "1.0"
+	},
+	"allowlist": {
+		"Teleport": "8.*"
+	},
+	"remove_old_catalogs": false,
+	"munki_repo": "$GITHUB_WORKSPACE",
+	"run_makecatalogs": false,
+	"fields_to_copy": [
+		"postinstall_script",
+		"postuninstall_script",
+		"blocking_applications",
+		"icon_name",
+		"category",
+		"description",
+		"developer",
+		"display_name",
+		"minimum_os_version",
+		"preinstall_alert"
+	],
+	"force_install_days": 18,
+	"force_install_time": {
+		"hour": 10,
+		"minute": 30
+	},
+	"enforce_force_install_time": true,
+	"enforce_force_install_date": true,
+	"force_install_denylist": [],
+	"notify_slack": true,
+	"slack_channel": "#it-endpoint-notifications",
+	"output_results": true,
+	"output_results_path": "autopromote/results.plist",
+	"logging_level": "DEBUG",
+	"envfile": "~/.autopromote.env",
+	"patch_tuesday": 2
+}
