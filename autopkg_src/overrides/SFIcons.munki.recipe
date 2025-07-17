@@ -19,7 +19,8 @@
 			<key>description</key>
 			<string>Icon generator using SF Symbols</string>
 			<key>developer</key>
-			<string>Adam "The Cool Dude" Anklewicz</key>
+			<string>Adam "The cool dude" Anklewicz</string>
+			<key>display_name</key>
 			<string>SFIcons</string>
 			<key>name</key>
 			<string>%NAME%</string>
