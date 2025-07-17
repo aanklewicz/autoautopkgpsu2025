@@ -2,41 +2,35 @@ name: AutoPkg run
 
 on:
   schedule:
-    - cron: '23 4 * * 2,4,6' # At 04:00 on Tuesday, Thursday, and Saturday.
+    - cron: 00 12 * * 1-5 # Every week day at noon GMT
   workflow_dispatch: # manually triggered
     inputs:
       recipe:
-        description: Recipe to Run (optional)
+        description: Recipe to Run (optional) # only need  the name of the file, not the path. ie ObserveAI.munki.recipe
         required: false
 
 jobs:
   AutoPkg:
     runs-on: macos-latest
-    timeout-minutes: 150 # Keeps your builds from running too long
+    timeout-minutes: 20 # Keeps your builds from running too long
     env:
-      MUNKI_VERSION: 6.3.1
-      MUNKI_EXPLICIT_VERSION: 6.3.1.4580
+      MUNKI_VERSION: 6.4.0
+      MUNKI_EXPLICIT_VERSION: 6.4.0.4627
       AUTOPKG_VERSION: 2.7.2
       PYTHON_VERSION: 3.11.4
     steps:
-    - id: create_token
-      uses: tibdex/github-app-token@v2
-      with:
-        app_id: ${{ secrets.APP_ID }}
-        private_key: ${{ secrets.PRIVATE_KEY }}
-    
     - name: Checkout this repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
-        token: ${{ steps.create_token.outputs.token }}
+        token: ${{ secrets.RW_REPO_TOKEN }}
 
     - name: Install Munki
-      uses: joncrain/macos-pkg-install@v1.0
+      uses: joncrain/macos-pkg-install@7134d2a14cf37a88794d794ea0281e1e84161a51 #v1
       with:
         pkg_url: https://github.com/munki/munki/releases/download/v${{ env.MUNKI_VERSION }}/munkitools-${{ env.MUNKI_EXPLICIT_VERSION }}.pkg
 
     - name: Install AutoPkg
-      uses: joncrain/macos-pkg-install@v1.0
+      uses: joncrain/macos-pkg-install@7134d2a14cf37a88794d794ea0281e1e84161a51 #1
       with:
         pkg_url: https://github.com/autopkg/autopkg/releases/download/v${{ env.AUTOPKG_VERSION }}/autopkg-${{ env.AUTOPKG_VERSION }}.pkg
 
@@ -46,7 +40,7 @@ jobs:
         /usr/bin/defaults write com.github.autopkg RECIPE_REPO_DIR "$GITHUB_WORKSPACE"/autopkg_src/repos/
         /usr/bin/defaults write com.github.autopkg FAIL_RECIPES_WITHOUT_TRUST_INFO -bool YES
         /usr/bin/defaults write com.github.autopkg MUNKI_REPO "$GITHUB_WORKSPACE"
-        /usr/bin/defaults write com.github.autopkg GITHUB_TOKEN "${{ steps.create_token.outputs.token }}"
+        /usr/bin/defaults write com.github.autopkg GITHUB_TOKEN "${{ secrets.RW_REPO_TOKEN }}"
         /bin/mkdir ./pkgs/
         /bin/mkdir -p /var/tmp/autopkg/
         /usr/bin/git config --global user.name "runner"
@@ -59,51 +53,57 @@ jobs:
         for repo in $(/bin/cat ./autopkg_src/repo_list.txt); do /usr/local/bin/autopkg repo-add "$repo"; done
 
     - name: Run makecatalogs
-      run: /usr/local/munki/makecatalogs ./ -s
+      run: /usr/local/munki/makecatalogs "$GITHUB_WORKSPACE" -s
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c #v5.0
       if: steps.python-cache.outputs.cache-hit != 'true'
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4.2.0
       id: python-cache
       with:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-${{ hashFiles('./autopkg_src/requirements.txt') }}
 
     - name: pip Install
-      run: pip install -r ./autopkg_src/requirements.txt
+      run: |
+        pip install -r ./autopkg_src/requirements.txt
+        pip install pyyaml
 
     - name: Run AutoPkg
       run: |
         python3 ./autopkg_src/autopkg_tools.py -l ./autopkg_src/recipe_list.json
       env:
         RECIPE: ${{ github.event.inputs.recipe }}
-        SUMMARY_WEBHOOK_TOKEN: ${{ secrets.SUMMARY_WEBHOOK_TOKEN }}
-        GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
+        SUMMARY_WEBHOOK_TOKEN: ${{ secrets.SLACK_WEBHOOK_URL }}
+        GITHUB_TOKEN: ${{ secrets.RW_REPO_TOKEN }}
         MUNKI_WEBSITE: ${{ vars.MUNKI_WEBSITE }}
 
-    # - name: Configure AWS credentials
-    #   if: always()
-    #   uses: aws-actions/configure-aws-credentials@v2
-    #   with:
-    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     aws-region: us-east-1
+    - name: Configure AWS credentials
+      if: always()
+      uses: aws-actions/configure-aws-credentials@010d0da01d0b5a38af31e9c3470dbfdabdecca3a
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
 
+    - name: Push client_resources to Storage Bucket
+      if: always()
+      run: |
+        aws s3 sync "$GITHUB_WORKSPACE"/client_resources/ s3://${{ secrets.BUCKET_SECRET_NAME }}/client_resources/ --exclude '.DS_Store' --exclude '.git' --exclude '.file'
 
-    # - name: Push packages to Storage Bucket
-    #   if: always()
-    #   run: |
-    #     aws s3 sync ./pkgs/ s3://${{secrets.AWS_S3_BUCKET}}/pkgs/
+    - name: Push packages to Storage Bucket
+      if: always()
+      run: |
+        aws s3 sync ./pkgs/ s3://${{ secrets.BUCKET_SECRET_NAME }}/pkgs/ --exclude '.git' --exclude '.DS_Store'
 
     - name: Gather Logs
       run: |
         /usr/bin/tar -czvf /var/tmp/autopkg.tar.gz /var/tmp/autopkg/
 
     - name: Upload log file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 #v4.3.3
       with:
         name: autopkg_log
         path: /var/tmp/autopkg.tar.gz
