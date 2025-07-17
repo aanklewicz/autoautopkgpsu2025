@@ -1,0 +1,46 @@
+name: Munki Catalog s3 Sync
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'pkgsinfo/**'
+  workflow_dispatch:
+
+jobs:
+  upload-to-s3:
+    runs-on: macos-latest
+    timeout-minutes: 20 # Keeps your builds from running too long
+    env:
+      MUNKI_VERSION: 6.4.0
+      MUNKI_EXPLICIT_VERSION: 6.4.0.4627
+
+    steps:
+    - name: Checkout this repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - name: Install Munki
+      uses: joncrain/macos-pkg-install@7134d2a14cf37a88794d794ea0281e1e84161a51 #v1
+      with:
+        pkg_url: https://github.com/munki/munki/releases/download/v${{ env.MUNKI_VERSION }}/munkitools-${{ env.MUNKI_EXPLICIT_VERSION }}.pkg
+
+    - name: Run makecatalogs
+      run: /usr/local/munki/makecatalogs "$GITHUB_WORKSPACE" -s
+
+    - name: Configure AWS credentials
+      if: always()
+      uses: aws-actions/configure-aws-credentials@010d0da01d0b5a38af31e9c3470dbfdabdecca3a
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.BUCKET_SECRET_REGION }}
+
+    - name: Push catalogs to Storage Bucket
+      if: always()
+      run: |
+        aws s3 sync "$GITHUB_WORKSPACE"/catalogs/ s3://${{secrets.BUCKET_SECRET_NAME }}/catalogs/ --exclude '.DS_Store' --exclude '.git' --exclude '.file'
+        aws s3 sync "$GITHUB_WORKSPACE"/pkgsinfo/ s3://${{secrets.BUCKET_SECRET_NAME }}/pkgsinfo/ --exclude '.DS_Store' --exclude '.git' --exclude '.file' --delete
+        aws s3 sync "$GITHUB_WORKSPACE"/manifests/ s3://${{secrets.BUCKET_SECRET_NAME }}/manifests/ --exclude '.DS_Store' --exclude '.git' --exclude '.file'
