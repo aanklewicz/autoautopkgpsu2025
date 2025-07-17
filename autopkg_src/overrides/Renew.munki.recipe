@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Identifier</key>
+	<string>local.munki.Renew</string>
+	<key>Input</key>
+	<dict>
+		<key>MUNKI_REPO_SUBDIR</key>
+		<string></string>
+		<key>NAME</key>
+		<string>Renew</string>
+		<key>pkginfo</key>
+		<dict>
+			<key>catalogs</key>
+			<array>
+				<string>testing</string>
+			</array>
+			<key>description</key>
+			<string>Makes sure users are restarting their Macs</string>
+			<key>developer</key>
+			<string>Second Son Consulting ala Trevor</string>
+			<key>display_name</key>
+			<string>Renew</string>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>unattended_install</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>ParentRecipe</key>
+	<string>com.github.aanklewicz.munki.Renew</string>
+	<key>ParentRecipeTrustInfo</key>
+	<dict>
+		<key>non_core_processors</key>
+		<dict/>
+		<key>parent_recipes</key>
+		<dict>
+			<key>com.github.aanklewicz.download.Renew</key>
+			<dict>
+				<key>git_hash</key>
+				<string>397c1a36c64747b5bb905811f6055437005dcd8b</string>
+				<key>path</key>
+				<string>~/Library/AutoPkg/RecipeRepos/com.github.autopkg.aanklewicz-recipes/Renew/Renew.download.recipe</string>
+				<key>sha256_hash</key>
+				<string>381df4988e12103e123168fe55f3ade6b14dd0791974b22a0ff83656678dfde5</string>
+			</dict>
+			<key>com.github.aanklewicz.munki.Renew</key>
+			<dict>
+				<key>git_hash</key>
+				<string>005604a20ca65326694edd1ba1c3401b7baa6a6c</string>
+				<key>path</key>
+				<string>~/Library/AutoPkg/RecipeRepos/com.github.autopkg.aanklewicz-recipes/Renew/Renew.munki.recipe</string>
+				<key>sha256_hash</key>
+				<string>908dc74389881b3114bb4226ecbef466a26848425fdfa53f184645f1ce8b6274</string>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>

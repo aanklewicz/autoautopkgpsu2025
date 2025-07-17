@@ -1,3 +1,5 @@
 [
-   "Firefox.munki.recipe"
+   "Firefox.munki.recipe",
+   "Renew.munki.recipe",
+   "SFIcons.munki.recipe"
 ]

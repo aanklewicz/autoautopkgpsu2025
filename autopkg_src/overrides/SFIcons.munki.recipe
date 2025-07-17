@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Identifier</key>
+	<string>local.munki.SFIcons</string>
+	<key>Input</key>
+	<dict>
+		<key>MUNKI_REPO_SUBDIR</key>
+		<string></string>
+		<key>NAME</key>
+		<string>SFIcons</string>
+		<key>pkginfo</key>
+		<dict>
+			<key>catalogs</key>
+			<array>
+				<string>development</string>
+			</array>
+			<key>description</key>
+			<string>Icon generator using SF Symbols</string>
+			<key>developer</key>
+			<string>Adam "The Cool Dude" Anklewicz</key>
+			<string>SFIcons</string>
+			<key>name</key>
+			<string>%NAME%</string>
+			<key>unattended_install</key>
+			<true/>
+		</dict>
+	</dict>
+	<key>ParentRecipe</key>
+	<string>com.github.aanklewicz.munki.SFIcons</string>
+	<key>ParentRecipeTrustInfo</key>
+	<dict>
+		<key>non_core_processors</key>
+		<dict/>
+		<key>parent_recipes</key>
+		<dict>
+			<key>com.github.aanklewicz.download.SFIcons</key>
+			<dict>
+				<key>git_hash</key>
+				<string>683ffda40c701b9917864ce27b1eb76b82578d38</string>
+				<key>path</key>
+				<string>~/Library/AutoPkg/RecipeRepos/com.github.autopkg.aanklewicz-recipes/SFIcons/SFIcons.download.recipe</string>
+				<key>sha256_hash</key>
+				<string>67cc23188951fd37458e753e5f2c283e8ce173267f757c1ce82a3dbd5100a12b</string>
+			</dict>
+			<key>com.github.aanklewicz.munki.SFIcons</key>
+			<dict>
+				<key>git_hash</key>
+				<string>683ffda40c701b9917864ce27b1eb76b82578d38</string>
+				<key>path</key>
+				<string>~/Library/AutoPkg/RecipeRepos/com.github.autopkg.aanklewicz-recipes/SFIcons/SFIcons.munki.recipe</string>
+				<key>sha256_hash</key>
+				<string>3d1ef77d773ead089dd12ca55e5248f06e2d2f25a52d8aa2394696e4b11651a3</string>
+			</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>
