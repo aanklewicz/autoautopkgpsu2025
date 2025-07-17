@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>autoremove</key>
+		<false/>
+		<key>catalogs</key>
+		<array>
+			<string>development</string>
+		</array>
+		<key>description</key>
+		<string>Icon generator using SF Symbols</string>
+		<key>developer</key>
+		<string>Adam "The cool dude" Anklewicz</string>
+		<key>display_name</key>
+		<string>SFIcons</string>
+		<key>installed_size</key>
+		<integer>2022</integer>
+		<key>installer_item_hash</key>
+		<string>ade95e82829e603c80e84e3d6a1327327803e7f79435a3a6250f43747a54557b</string>
+		<key>installer_item_location</key>
+		<string>SFIcons-1.4.pkg</string>
+		<key>installer_item_size</key>
+		<integer>873</integer>
+		<key>minimum_os_version</key>
+		<string>10.5.0</string>
+		<key>name</key>
+		<string>SFIcons</string>
+		<key>receipts</key>
+		<array>
+			<dict>
+				<key>installed_size</key>
+				<integer>2022</integer>
+				<key>packageid</key>
+				<string>com.neverhadtofight.sficons</string>
+				<key>version</key>
+				<string>1.4</string>
+			</dict>
+		</array>
+		<key>unattended_install</key>
+		<true/>
+		<key>uninstall_method</key>
+		<string>removepackages</string>
+		<key>uninstallable</key>
+		<true/>
+		<key>version</key>
+		<string>1.4</string>
+	</dict>
+</array>
+</plist>

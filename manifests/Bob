@@ -5,11 +5,17 @@
 	<key>catalogs</key>
 	<array>
 		<string>testing</string>
+		<string>development</string>
 	</array>
 	<key>managed_installs</key>
 	<array>
 		<string>Firefox</string>
 		<string>zoomusInstallerFull</string>
+	</array>
+	<key>optional_installs</key>
+	<array>
+		<string>Renew</string>
+		<string>SFIcons</string>
 	</array>
 </dict>
 </plist>
