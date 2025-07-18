@@ -1,8 +1,8 @@
 name: AutoPkg run
 
 on:
-  schedule:
-    - cron: 00 12 * * 1-5 # Every week day at noon GMT
+  # schedule: # Commenting this out so it doesn't actually run, if you use this in production, you'll want to uncomment
+  #   - cron: 00 12 * * 1-5 # Every week day at noon GMT
   workflow_dispatch: # manually triggered
     inputs:
       recipe:

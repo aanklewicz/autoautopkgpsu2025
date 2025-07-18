@@ -2,8 +2,8 @@ name: Munki Auto-Promote
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: 00 13 * * * # Every weekday at 1300 GMT
+  # schedule: # Commenting this out so it doesn't actually run, if you use this in production, you'll want to uncomment
+  #   - cron: 00 13 * * * # Every weekday at 1300 GMT
 jobs:
   munki-autopromote:
     runs-on: macos-latest
